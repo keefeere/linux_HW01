@@ -4,7 +4,7 @@ This set of scripts is homework for DevOPS01 cource
 
 ## TASK:
 
-Task description goes here^
+Task description goes here:
 
 https://github.com/DevOps01-ua/Linux01/blob/main/homework/HW1.md
 
