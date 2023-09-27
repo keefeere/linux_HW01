@@ -31,63 +31,52 @@ fi
 
 
 
-
-if command -v apt-get >/dev/null; then
-  echo "apt-get is used here"
-  sudo apt update
-  sudo apt -y upgrade
-  sudo apt install -y python3 python3-pip python3-venv virtualenv mysql-client git
-  sudo apt install -y python-autopep8
-  if [[ $(lsb_release -rs) == "18.04" ]]; then # replace 8.04 by the number of release you want
-      #Version tuning (Cheatcodes=ON)
-      sudo apt install -y python3.7 python3-pip
-      sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 2
-  else
-       echo "Non-compatible version"
-  fi
-
-elif command -v yum >/dev/null; then
-  echo "yum is used here"
-  #TODO: Write yum packages installing
-else
-  echo "Sorry, i cant continue, distro is unknown"
-fi
-
-# Make a directory
-mkdir envs
-
-# Create virtual environment
-virtualenv ./envs/
-
-# Activate virtual environment
-source envs/bin/activate
-
 # Clone the repository from GitHub
 git clone "https://github.com/Manisha-Bayya/simple-django-project.git"
 
 # Install requirements
 cd simple-django-project/
-pip3 install -r requirements.txt
+#pip3 install -r requirements.txt
 
 #Install forgotten requirements
-pip3 install django==3.2.10
+pip3 install django==1.11.29
+
+
+#setuptools is needed for succesful installing of haystack
+#https://github.com/googleapis/google-cloud-python/issues/3884
 pip3 install -U "setuptools==44.1.1"
-pip3 install pymysql
-pip3 install haystack
-pip3 install django-phonenumber-field
-pip3 install django-phonenumbers
-pip3 install django-haystack
-pip3 install whoosh
+
+#From pipreqs and original requirements.txt
+#pip3 install pymysql
+pip3 install PyMySQL==0.9.3
+pip3 install django-haystack==2.8.1
+pip3 install django-phonenumber-field==2.2.0
+pip3 install phonenumbers==8.9.6
+
+# raise MissingDependency("The 'whoosh' backend requires the installation of 'Whoosh'. Please refer to the documentation.")
+pip3 install whoosh==2.7.4
+
+
+#Old
+# pip3 install django==1.11.29
+# pip3 install -U "setuptools==44.1.1"
+# pip3 install pymysql
+# pip3 install django-phonenumber-field==2.2.0
+# pip3 install phonenumbers==8.9.6
+# pip3 install django-haystack==2.8.1
+# pip3 install whoosh==2.7.4
+
 
 #fix some indian code
 pip3 install --upgrade autopep8
-sudo apt install -y python-autopep8
+#sudo apt install -y python-autopep8
 autopep8 -i world/models.py
 
 #Load sample data into MySQL
-sudo mysql -u root -p$MYSQL_ROOT_PASSWORD  < ~/simple-django-project/world.sql
+#sudo 
+mysql -u root -p$MYSQL_ROOT_PASSWORD  < ~/simple-django-project/world.sql
 
-#MAGIC. edit config with sed and insert to it env variables. Thanks ChatGPB for our happy childhood!!
+#MAGIC. edit config with sed and insert to it env variables. Thanks ChatGPT for our happy childhood!!
 echo "s/'PASSWORD': '[^']*',\$/'PASSWORD': '\$MYSQL_ROOT_PASSWORD',/g" | envsubst | sed -i -f - ./panorbit/settings.py
 echo "s/\s*EMAIL_HOST_USER = '[^']*'\$/EMAIL_HOST_USER = '\$EMAIL_HOST_USER'/g" | envsubst | sed -i -f - ./panorbit/settings.py
 echo "s/\s*EMAIL_HOST_PASSWORD = '[^']*'\$/EMAIL_HOST_PASSWORD = '\$EMAIL_HOST_PASSWORD'/g" | envsubst | sed -i -f - ./panorbit/settings.py
@@ -96,7 +85,7 @@ echo "s/\s*EMAIL_HOST_PASSWORD = '[^']*'\$/EMAIL_HOST_PASSWORD = '\$EMAIL_HOST_P
 python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py rebuild_index
-# Run the Django server on port 8000
-echo "Running the Django server on port 8000..."
-python3 manage.py runserver 8000
+# Run the Django server on port 8001
+echo "Running the Django server on port 8001..."
+python3 manage.py runserver 8001
 
