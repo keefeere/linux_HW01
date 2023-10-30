@@ -1,3 +1,9 @@
 simple-django-project/
 /MySQLRootPass.log
 /provisiontest.sh
+*.deb
+*.rpm
+*.deb.*
+*.rpm.*
+*OLD.sh
+/mail_config.sh

@@ -30,5 +30,6 @@
    * python3 manage.py makemigrations
    * python3 manage.py migrate
    * python3 manage.py rebuild_index
-10. Run application
+10. Check if port 8000 is free? 
+11. Run application
     * python3 manage.py runserver 8000
